@@ -32,4 +32,4 @@ const Footer = `
 <!-- End Footer -->
 `;
 
-export default Footer;
+module.exports = { Footer };

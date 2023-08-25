@@ -11,4 +11,4 @@ const Header = `
 <!-- End Header -->
 `;
 
-export default Header;
+module.exports = { Header };

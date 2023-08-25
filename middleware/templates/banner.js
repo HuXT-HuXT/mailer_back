@@ -8,4 +8,4 @@ const Banner = `
 </mj-wrapper>
 `;
 
-export default Banner;
+module.exports = { Banner };

@@ -21,4 +21,4 @@ const Agenda = `
 </mj-wrapper>
 `;
 
-export default Agenda;
+module.exports = {Agenda};

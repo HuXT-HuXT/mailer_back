@@ -18,4 +18,4 @@ const UpcomingEvents = `
 </mj-wrapper>
 `;
 
-export default UpcomingEvents;
+module.exports = { UpcomingEvents };

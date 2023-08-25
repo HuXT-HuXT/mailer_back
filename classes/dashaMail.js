@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios =  require("axios");
 
 class DashaMail {
   constructor(baseurl, apiKey, fromName, fromEmail) {
@@ -36,11 +36,6 @@ class DashaMail {
     });
     return updateCampaign.data.response.msg.err_code;
   }
+};
 
-  async quick() {
-    const camps = await this.HTTPClient('?method=campaigns.get')
-    return camps;
-  }
-}
-
-export default DashaMail;
+module.exports = { DashaMail };

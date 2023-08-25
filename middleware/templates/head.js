@@ -42,4 +42,4 @@ const Head = `
 </mj-style>
 `;
 
-export default Head;
+module.exports = { Head };

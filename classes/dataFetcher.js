@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios =  require("axios");
 
 class DataFetcher {
   constructor(baseURL, token) {
@@ -54,4 +54,4 @@ class DataFetcher {
   }
 }
 
-export default DataFetcher;
+module.exports = { DataFetcher };

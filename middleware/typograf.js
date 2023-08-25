@@ -1,5 +1,7 @@
-import Typograf from "typograf";
+const Typograf = require("typograf");
 
-export default new Typograf({ locale: ["ru", "en-US"] }).disableRule(
+const mailTypograf = new Typograf({ locale: ["ru", "en-US"] }).disableRule(
   "common/symbols/cf"
 );
+
+module.exports = { mailTypograf };

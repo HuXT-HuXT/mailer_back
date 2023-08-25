@@ -1,24 +1,25 @@
-import DataFetcher from '../classes/dataFetcher.js';
-import EventLetter from '..//classes/letter.js';
+const {DataFetcher} = require('../classes/dataFetcher');
+const {EventLetter} = require('../classes/letter');
 
 const eventApi = new DataFetcher(
   process.env.STRAPI_BASE_URL,
   process.env.STRAPI_TOKEN
 );
 
-async function getLetters() {
+async function getLetters(req, res) {
   const events = await eventApi.getEvents();
   const eventLetters = events.map(event => new EventLetter(event));
-  return eventLetters;
+  res.send({ data: eventLetters});
 };
 
-async function getCurrentLetter(uuid) {
+async function getCurrentLetter(req, res) {
+  const { uuid } = req.params;
   const event = await eventApi.getEvent(uuid);
   const eventLetter = new EventLetter(event);
-  return eventLetter;
+  res.send({ data: eventLetter });
 };
 
-export {
+module.exports = {
   getLetters,
   getCurrentLetter
 };

@@ -34,4 +34,4 @@ const Price = `
 </mj-wrapper>
 `;
 
-export default Price;
+module.exports = { Price };
