@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
 app.use(require('./routes/events'));
+app.use(require('./routes/campaigns'));
 
 app.listen(PORT, () => {
   console.log('Server Up!')

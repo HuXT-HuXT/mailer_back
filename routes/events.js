@@ -1,9 +1,8 @@
 const router = require('express').Router();
 const {
-  getLetters, getCurrentLetter,
+  getLetters,
 } = require('../controllers/events');
 
 router.get('/letters', getLetters);
-router.get('/letters/:uuid', getCurrentLetter);
 
 module.exports = router;
