@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import DashaMail from "./dashamail.js";
 import DataFetcher from './datafetcher.js';
 import EventLetter from "./letter.js";
+import { cors } from './middlewares/cors.js';
 
 dotenv.config({path: './.env'});
 
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
+app.use(cors);
 
 const dataFetcher = new DataFetcher(
   process.env.STRAPI_BASE_URL,
