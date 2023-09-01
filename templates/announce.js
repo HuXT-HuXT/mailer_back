@@ -19,4 +19,4 @@ const Announce = `
 </mj-wrapper>
 `;
 
-module.exports = {Announce};
+export default Announce;

@@ -1,15 +1,15 @@
-const Handlebars = require("handlebars");
-const { marked } = require("marked");
-const Head = require("./head.js");
-const Header = require("./header.js");
-const Banner = require("./banner.js");
-const Announce = require("./announce.js");
-const Divider = require("./divider.js");
-const Agenda = require("./agenda.js");
-const Speaker = require("./speaker.js");
-const Price = require("./price.js");
-const Footer = require("./footer.js");
-const LegalNotice = require("./legal-notice.js");
+import Handlebars from "handlebars";
+import { marked } from "marked";
+import Head from "./head.js";
+import Header from "./header.js";
+import Banner from "./banner.js";
+import Announce from "./announce.js";
+import Divider from "./divider.js";
+import Agenda from "./agenda.js";
+import Speaker from "./speaker.js";
+import Price from "./price.js";
+import Footer from "./footer.js";
+import LegalNotice from "./legal-notice.js";
 
 Handlebars.registerHelper("getFirstLetter", function (str) {
     return str[0] + ".";
@@ -66,4 +66,4 @@ const Base = `
 `;
 
 const template = Handlebars.compile(Base);
-module.exports = { template };
+export default template;

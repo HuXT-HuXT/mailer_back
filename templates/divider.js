@@ -6,4 +6,4 @@ const Divider = `
 </mj-section>
 `;
 
-module.exports = { Divider };
+export default Divider;

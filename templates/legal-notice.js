@@ -11,4 +11,4 @@ const LegalNotice = `
 <!-- End Legal notice -->
 `;
 
-module.exports = { LegalNotice };
+export default LegalNotice;

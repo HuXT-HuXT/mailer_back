@@ -18,4 +18,4 @@ const Speaker = `
 </mj-wrapper>
 `;
 
-module.exports = { Speaker };
+export default Speaker;

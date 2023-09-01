@@ -1,4 +1,4 @@
-const axios =  require("axios");
+import axios from "axios";
 
 class DataFetcher {
   constructor(baseURL, token) {
@@ -11,7 +11,7 @@ class DataFetcher {
 
   async getEvents() {
     const eventsResponseData = await this.HTTPClient.get(
-      "/api/webinars?populate[speaker][populate]=photo&populate[banner]=*"
+      "/api/events?populate[speaker][populate]=photo&populate[banner]=*"
     );
 
     const eventsData = eventsResponseData.data.data;
@@ -45,6 +45,7 @@ class DataFetcher {
         email: {
           subject: entry.attributes.email_title,
           sendDatetime: entry.attributes.send_datetime,
+          uuid: entry.attributes.uuid,
         },
       };
       events.push(event);
@@ -54,4 +55,4 @@ class DataFetcher {
   }
 }
 
-module.exports = { DataFetcher };
+export default DataFetcher;

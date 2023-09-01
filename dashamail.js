@@ -1,4 +1,4 @@
-const axios =  require("axios");
+import axios from "axios";
 
 class DashaMail {
   constructor(baseurl, apiKey, fromName, fromEmail) {
@@ -9,22 +9,22 @@ class DashaMail {
     this.HTTPClient = axios.create({
       baseURL: this.baseurl,
     });
-    this.HTTPClient.interceptors.request.use(config => {
+    this.HTTPClient.interceptors.request.use(config => {      
       config.params = config.params || {};
-      config.params['api_key'] = apiKey;
+      config.params['api_key'] = this.apiKey;
       return config;
     });
   }
-  async scheduleCampaign(letter, addressListID, uuid) {
+  async scheduleCampaign(letter, addressListID) {
     const newCampaign = await this.HTTPClient('?method=campaigns.create',{
       data: {
         list_id: [addressListID],
         name: letter.subject,
         subject: letter.subject,
+        external_campaign_id: letter.uuid,
         html: letter.body,
         from_name: this.fromName,
         from_email: this.fromEmail,
-        external_campaign_id: uuid,
       }
     });
     const campId = newCampaign.data.response.data.campaign_id;
@@ -38,28 +38,29 @@ class DashaMail {
     return updateCampaign.data.response.msg.err_code;
   }
 
-  async getCampaignStatus(uuid) {
-    const camp = await this.HTTPClient('?method=campaigns.get', {
+  async getCampStatus(id) {    
+    const campStatus = await this.HTTPClient('?method=campaigns.get', {
       data: {
-        external_campaign_id: uuid,
+        external_campaign_id: id,
       }
     });
-    const campInfo = {
-      status: camp.data.response.data.status,
-      id: camp.data.response.data.id,
-      external_campaign_id: camp.data.response.data.external_campaign_id,
-    };
-    return campInfo;
+    // return campStatus.data.response.data.status;
+    return campStatus.data.response;
   }
 
-  async removeCampaign(id) {
-    const removedCamp = await this.HTTPClient('?method=campaigns.delete', {
+  async removeCamp(id) {
+    const removalStatus = await this.HTTPClient('?method=campaigns.delete', {
       data: {
         campaign_id: id,
       }
     });
-    return removedCamp;
+    return removalStatus;
   }
-};
 
-module.exports = { DashaMail };
+  async getCampaigns(){
+    const campaigns = await this.HTTPClient('?method=campaigns.get');
+    return campaigns;
+  }
+}
+
+export default DashaMail;
