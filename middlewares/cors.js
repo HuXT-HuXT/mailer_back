@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-const allowedCors = 'http://localhost:3000';
+const allowedCors = 'http://localhost:12352';
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
 export const cors = (req, res, next) => {

@@ -61,8 +61,35 @@ async function getStatus(id) {
     .catch(err => console.log(err))
 }
 
+async function test() {
+  const events = [];
+  dataFetcher.getEvents()
+    .then((data) => {
+      data.map((item) => {
+        // console.log(item.email.uuid);
+        return api.getCampStatus(item.email.uuid)
+          .then((upData) => {
+            if (upData.msg.text === 'OK') {
+            //   res.send({
+            //   status: data.data[0].status,
+            // });
+
+            } else {
+              // res.send({ status: 'DRAFT' });
+            }
+          })
+      })
+    })
+    .catch(err => console.log())
+
+  return events;
+};
+
+const newTest = await test();
+console.log(newTest);
+
 // removeCamp(3209498);
-getCampaigns();
+// getCampaigns();
 // getStatus('3209505');
 
 // console.log(test[0].uuid);
