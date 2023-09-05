@@ -68,7 +68,7 @@ async function proceedEvent(event) {
       body: new EventLetter(event).body,
       sendDateTime: event.email.sendDateTime,
       status: status.data[0].status,
-    }    
+    }
   } else {
     updatedEvent = {
       uuid: event.email.uuid,
@@ -76,8 +76,8 @@ async function proceedEvent(event) {
       body: new EventLetter(event).body,
       sendDateTime: event.email.sendDateTime,
       status: 'DRAFT',
-    }    
-  }  
+    }
+  }
   return updatedEvent;
 }
 
@@ -85,8 +85,8 @@ async function sum() {
   const events = await dataFetcher.getEvents();
   const array = []
   await Promise.all(
-    events.map(async (item) => {    
-      array.push(await proceedEvent(item));    
+    events.map(async (item) => {
+      array.push(await proceedEvent(item));
     })
   )
   return array;
@@ -98,7 +98,7 @@ async function getEventById(uuid) {
 }
 
 // getEventById('6aa4b0be-97e6-4052-bf8f-b9026812b904');
-// main(letter, listId)
+// main(letter, listId);
 // const fin = await sum();
 // console.log('fin:', fin);
 // removeCamp(3215809);

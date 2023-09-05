@@ -37,16 +37,16 @@ async function proceedEvent(event) {
       sendDateTime: event.email.sendDateTime,
       status: 'DRAFT',
     }
-  }  
+  }
   return updatedEvent;
 };
 
 async function finishEvents() {
-  const events = await dataFetcher.getEvents();  
+  const events = await dataFetcher.getEvents();
   const updatedEvents = [];
   await Promise.all(
-    events.map(async (item) => {    
-      updatedEvents.push(await proceedEvent(item));    
+    events.map(async (item) => {
+      updatedEvents.push(await proceedEvent(item));
     })
   )
   return updatedEvents;
@@ -58,23 +58,47 @@ async function finishEvent(uuid) {
   return updatedEvent;
 };
 
-async function proceedCamp(uuid) {
+async function removeCamp(uuid) {
   const campId = await dashamail.getCampStatus(uuid)
-  
   let removalStatus;
   if (campId.msg.text === 'OK') {
-    removalStatus = await dashamail.removeCamp(campId.data.id)
+    removalStatus = (await dashamail.removeCamp(campId.data[0].id)).data.response.msg
   } else {
-    removalStatus = 'fail' ;
+    removalStatus = {
+      err_code: 1,
+      text: 'NOT OK',
+      type: 'message',
+    } ;
   }
   return removalStatus;
 }
 
-export { 
+function proceedResponse(result) {
+  let response
+  if (result.text === 'OK') {
+    response = {
+      meta: {
+        err_code: 0,
+        text: 'OK',
+      }
+    }
+  } else {
+    response = {
+      meta: {
+        err_code: 1,
+        text: 'NOT OK',
+      }
+    }
+  }
+  return response;
+}
+
+export {
   proceedEvent,
   finishEvents,
   finishEvent,
-  proceedCamp,
-  dashamail, 
+  removeCamp,
+  proceedResponse,
+  dashamail,
   dataFetcher,
 };
