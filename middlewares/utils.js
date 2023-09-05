@@ -42,8 +42,7 @@ async function proceedEvent(event) {
 };
 
 async function finishEvents() {
-  const events = await dataFetcher.getEvents();
-  console.log(events)
+  const events = await dataFetcher.getEvents();  
   const updatedEvents = [];
   await Promise.all(
     events.map(async (item) => {    
@@ -59,10 +58,23 @@ async function finishEvent(uuid) {
   return updatedEvent;
 };
 
+async function proceedCamp(uuid) {
+  const campId = await dashamail.getCampStatus(uuid)
+  
+  let removalStatus;
+  if (campId.msg.text === 'OK') {
+    removalStatus = await dashamail.removeCamp(campId.data.id)
+  } else {
+    removalStatus = 'fail' ;
+  }
+  return removalStatus;
+}
+
 export { 
   proceedEvent,
   finishEvents,
   finishEvent,
+  proceedCamp,
   dashamail, 
   dataFetcher,
 };

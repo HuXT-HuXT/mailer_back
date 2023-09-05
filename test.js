@@ -98,11 +98,11 @@ async function getEventById(uuid) {
 }
 
 // getEventById('6aa4b0be-97e6-4052-bf8f-b9026812b904');
-main(letter, listId)
+// main(letter, listId)
 // const fin = await sum();
 // console.log('fin:', fin);
 // removeCamp(3215809);
 // getCampaigns();
-// getStatus('02d77e67-5556-4872-a4b5-88e633e4d091');
+getStatus('pew-pew');
 
 // console.log(test[0].uuid);

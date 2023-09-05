@@ -5,7 +5,8 @@ import { cors } from './middlewares/cors.js';
 import {  
   finishEvents,
   finishEvent,
-  dashamail,  
+  dashamail,
+  proceedCamp,
 } from './middlewares/utils.js';
 
 dotenv.config({path: './.env'});
@@ -51,32 +52,38 @@ app.post('/letters/:id/schedule', (req, res) => {
             err_code: 0,
             text: 'OK',
           }
-        })
+        });
+      } else {
+        res.send({
+          meta: {
+            err_code: 1,
+            text: 'NOT OK',
+          }
+        });
       }
     })
     .catch(err => console.log(err));
 })
 
-app.get('/letters/:id/status', (req, res) => {
-  const uuid = req.params;
-  dashamail.getCampStatus(uuid.id)
-    .then((data) => {
-      if (data.msg.text === 'OK') {
-        res.send({
-          status: data.data[0].status,
-        });
-      } else {
-        res.send({ status: 'DRAFT' });
+app.post('/letters/:id/delete', async (req, res) => {
+  const uuid = req.params.id;
+  const removalStatus = await proceedCamp(uuid);
+  console.log(removalStatus.data.response.msg)
+  if (removalStatus.text === 'OK') {
+    res.send({
+      meta: {
+        err_code: 0,
+        text: 'OK',
       }
-    })
-    .catch(err => console.log(err))
-});
-
-app.post('/letters/:id/delete', (req, res) => {
-  const { id } = req.body;
-  dashamail.removeCamp(id)
-    .then(data => res.send({ data: data.data.response.msg }))
-    .catch(err => console.log(err))
+    });
+  } else {
+    res.send({
+      meta: {
+        err_code: 1,
+        text: 'NOT OK',
+      }
+    });
+  }
 });
 
 app.listen(PORT, () => {

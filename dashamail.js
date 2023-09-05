@@ -38,13 +38,12 @@ class DashaMail {
     return updateCampaign.data.response.msg;
   }
 
-  async getCampStatus(id) {    
+  async getCampStatus(uuid) {    
     const campStatus = await this.HTTPClient('?method=campaigns.get', {
       data: {
-        external_campaign_id: id,
+        external_campaign_id: uuid,
       }
-    });
-    // return campStatus.data.response.data.status;
+    });    
     return campStatus.data.response;
   }
 
