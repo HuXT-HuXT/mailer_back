@@ -1,10 +1,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import DashaMail from "./dashamail.js";
-import DataFetcher from './datafetcher.js';
-import EventLetter from "./letter.js";
 import { cors } from './middlewares/cors.js';
+import {  
+  finishEvents,
+  finishEvent,
+  dashamail,  
+} from './middlewares/utils.js';
 
 dotenv.config({path: './.env'});
 
@@ -16,86 +18,44 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cors);
 
-const dataFetcher = new DataFetcher(
-  process.env.STRAPI_BASE_URL,
-  process.env.STRAPI_TOKEN
-);
+app.get('/letters', async (req, res) => {
+  const answer = await finishEvents();  
+  res.send({ 
+    data: answer,
+    meta: {
+      err_code: 0,
+      text: 'OK'
+    }
+  })
+});
 
-const baseurl = process.env.DASHAMAIL_BASE_URL;
-const apiKey = process.env.DASHAMAIL_API_KEY;
-const fromName = process.env.FROM_NAME;
-const fromEmail = process.env.FROM_EMAIL;
-const listId = process.env.DASHAMAIL_LIST_ID;
-
-const dashamail = new DashaMail(baseurl, apiKey, fromName, fromEmail);
-
-// app.get('/letters', (req, res) => {
-//   dataFetcher.getEvents()
-//     .then((events) => {
-//       const eventLetters = events.map((event) => {
-//         return {
-//           title: event.title,
-//           photo: event.speaker.photo,
-//           letter: new EventLetter(event),
-//         }
-//       })
-//       res.send({ data: eventLetters });
-//     })
-//     .catch(err => console.log(err));
-// })
+app.get('/letters/:id', async (req, res) => {
+  const uuid = req.params.id;
+  const answer = await finishEvent(uuid);
+  res.send({
+    data: answer,
+    meta: {
+      err_code: 0,
+      text: 'OK'
+    }
+  })
+});
 
 app.post('/letters/:id/schedule', (req, res) => {
   const { letter } = req.body;
   dashamail.scheduleCampaign(letter, listId)
-    .then(data => res.send({data}))
+    .then((data) => {
+      if (data.text === 'OK') {
+        res.send({
+          meta: {
+            err_code: 0,
+            text: 'OK',
+          }
+        })
+      }
+    })
     .catch(err => console.log(err));
 })
-
-// --------------------TEST-------------------
-app.get('/letters', async (req, res) => {
-  const events = await dataFetcher.getEvents();
-  const updatedEvents = events.map((event) => {
-    return dashamail.getCampStatus(event.email.uuid)
-      .then((dashaData) => {
-        let dashaStatus;
-        if (dashaData.msg.text === 'OK') {
-          dashaStatus = dashaData.data[0].status;
-        } else {
-          dashaStatus = 'DRAFT';
-        }
-        return {
-          uuid: event.email.uuid,
-          subject: event.email.subject,
-          body: new EventLetter(event).body,
-          sendDateTime: event.email.sendDateTime,
-          status: dashaStatus,
-        }
-      });
-    // const dashaData = await dashamail.getCampStatus(event.email.uuid)
-    // console.log(dashaData);
-    // let dashaStatus;
-    // if (dashaData.msg.text === 'OK') {
-    //   dashaStatus = dashaData.data[0].status;
-    // } else {
-    //   dashaStatus = 'DRAFT';
-    // }
-    // return {
-    //   uuid: event.email.uuid,
-    //   subject: event.email.subject,
-    //   body: new EventLetter(event).body,
-    //   sendDateTime: event.email.sendDateTime,
-    //   status: dashaStatus,
-    // }
-  })
-  res.send({
-    data: updatedEvents,
-    meta: {
-      err_code: 0,
-      text: 'OK',
-    }
-  })
-})
-// --------------------TEST-------------------
 
 app.get('/letters/:id/status', (req, res) => {
   const uuid = req.params;

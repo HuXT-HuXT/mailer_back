@@ -35,7 +35,7 @@ class DashaMail {
         delivery_time: letter.sendDatetime,
       }
     });
-    return updateCampaign.data.response.msg.err_code;
+    return updateCampaign.data.response.msg;
   }
 
   async getCampStatus(id) {    

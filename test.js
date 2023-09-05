@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import DashaMail from "./dashamail.js";
 import DataFetcher from './datafetcher.js';
 import EventLetter from "./letter.js";
+import { letter } from './constants.js';
 
 dotenv.config({path: './.env'});
 
@@ -18,8 +19,6 @@ async function main(letter, listId) {
   console.log(newCampaign);
 };
 
-// main(letter, listId);
-
 const dataFetcher = new DataFetcher(
   process.env.STRAPI_BASE_URL,
   process.env.STRAPI_TOKEN
@@ -30,8 +29,6 @@ async function getLetters() {
   const eventLetters = events.map((event) => new EventLetter(event));
   return eventLetters;
 };
-
-// const test = await getLetters();
 
 async function getCampaigns() {
   api.getCampaigns()
@@ -61,35 +58,51 @@ async function getStatus(id) {
     .catch(err => console.log(err))
 }
 
-async function test() {
-  const events = [];
-  dataFetcher.getEvents()
-    .then((data) => {
-      data.map((item) => {
-        // console.log(item.email.uuid);
-        return api.getCampStatus(item.email.uuid)
-          .then((upData) => {
-            if (upData.msg.text === 'OK') {
-            //   res.send({
-            //   status: data.data[0].status,
-            // });
+async function proceedEvent(event) {
+  const status = await api.getCampStatus(event.email.uuid);
+  let updatedEvent;
+  if (status.msg.text === 'OK') {
+    updatedEvent = {
+      uuid: event.email.uuid,
+      subject: event.email.subject,
+      body: new EventLetter(event).body,
+      sendDateTime: event.email.sendDateTime,
+      status: status.data[0].status,
+    }    
+  } else {
+    updatedEvent = {
+      uuid: event.email.uuid,
+      subject: event.email.subject,
+      body: new EventLetter(event).body,
+      sendDateTime: event.email.sendDateTime,
+      status: 'DRAFT',
+    }    
+  }  
+  return updatedEvent;
+}
 
-            } else {
-              // res.send({ status: 'DRAFT' });
-            }
-          })
-      })
+async function sum() {
+  const events = await dataFetcher.getEvents();
+  const array = []
+  await Promise.all(
+    events.map(async (item) => {    
+      array.push(await proceedEvent(item));    
     })
-    .catch(err => console.log())
+  )
+  return array;
+}
 
-  return events;
-};
+async function getEventById(uuid) {
+  const event = await dataFetcher.getEventByUUID(uuid);
+  console.log(event);
+}
 
-const newTest = await test();
-console.log(newTest);
-
-// removeCamp(3209498);
+// getEventById('6aa4b0be-97e6-4052-bf8f-b9026812b904');
+main(letter, listId)
+// const fin = await sum();
+// console.log('fin:', fin);
+// removeCamp(3215809);
 // getCampaigns();
-// getStatus('3209505');
+// getStatus('02d77e67-5556-4872-a4b5-88e633e4d091');
 
 // console.log(test[0].uuid);
