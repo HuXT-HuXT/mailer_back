@@ -18,27 +18,14 @@ const dataFetcher = new DataFetcher(
   STRAPI_TOKEN,
 );
 
-async function proceedEvent(event) {
+async function proceedEvent(event) {  
   const status = await dashamail.getCampStatus(event.email.uuid);
-  let updatedEvent;
+  const letter = new EventLetter(event);
+  letter.status = 'DRAFT';  
   if (status.msg.text === 'OK') {
-    updatedEvent = {
-      uuid: event.email.uuid,
-      subject: event.email.subject,
-      body: new EventLetter(event).body,
-      sendDateTime: event.email.sendDateTime,
-      status: status.data[0].status,
-    }
-  } else {
-    updatedEvent = {
-      uuid: event.email.uuid,
-      subject: event.email.subject,
-      body: new EventLetter(event).body,
-      sendDateTime: event.email.sendDateTime,
-      status: 'DRAFT',
-    }
-  }
-  return updatedEvent;
+    letter.status = status.data[0].status;
+  } 
+  return letter;
 };
 
 async function finishEvents() {

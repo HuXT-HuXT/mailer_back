@@ -45,8 +45,9 @@ app.get('/letters/:id', async (req, res) => {
   })
 });
 
-app.post('/letters/:id/schedule', (req, res) => {
-  const { letter } = req.body;
+app.post('/letters/:id/schedule', async (req, res) => {
+  const uuid = req.params.id;
+  const letter = await finishEvent(uuid);  
   dashamail.scheduleCampaign(letter, listId)
     .then((data) => {
       const readyResponse = proceedResponse(data);

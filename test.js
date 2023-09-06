@@ -101,8 +101,8 @@ async function getEventById(uuid) {
 // main(letter, listId);
 // const fin = await sum();
 // console.log('fin:', fin);
-// removeCamp(3215809);
+// removeCamp("02d77e67-5556-4872-a4b5-88e633e4d091");
 // getCampaigns();
-getStatus('pew-pew');
+getStatus('02d77e67-5556-4872-a4b5-88e633e4d091');
 
 // console.log(test[0].uuid);
