@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import DashaMail from "./dashamail.js";
 import DataFetcher from './datafetcher.js';
 import EventLetter from "./letter.js";
-import { letter } from './constants.js';
 
 dotenv.config({path: './.env'});
 
@@ -33,6 +32,7 @@ async function getLetters() {
 async function getCampaigns() {
   api.getCampaigns()
     .then((data) => {
+      console.log(data.data.response)
       data.data.response.data.map((item) => {
         // console.log('___________');
         // console.log('id:', item.id);
@@ -43,7 +43,6 @@ async function getCampaigns() {
       })
     })
     .catch(err => console.log(err))
-
 }
 
 async function removeCamp(id) {
@@ -102,7 +101,7 @@ async function getEventById(uuid) {
 // const fin = await sum();
 // console.log('fin:', fin);
 // removeCamp("02d77e67-5556-4872-a4b5-88e633e4d091");
-// getCampaigns();
-getStatus('02d77e67-5556-4872-a4b5-88e633e4d091');
+getCampaigns();
+// getStatus('02d77e67-5556-4872-a4b5-88e633e4d091');
 
 // console.log(test[0].uuid);

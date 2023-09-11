@@ -2,6 +2,10 @@ import dotenv from 'dotenv';
 import DashaMail from "../dashamail.js";
 import EventLetter from "../letter.js";
 import DataFetcher from '../datafetcher.js';
+import {
+  OK,
+  NOT_OK,
+} from '../constants/constants.js';
 
 dotenv.config({path: './.env'});
 
@@ -51,11 +55,7 @@ async function removeCamp(uuid) {
   if (campId.msg.text === 'OK') {
     removalStatus = (await dashamail.removeCamp(campId.data[0].id)).data.response.msg
   } else {
-    removalStatus = {
-      err_code: 1,
-      text: 'NOT OK',
-      type: 'message',
-    } ;
+    removalStatus = NOT_OK;
   }
   return removalStatus;
 }
@@ -64,17 +64,11 @@ function proceedResponse(result) {
   let response
   if (result.text === 'OK') {
     response = {
-      meta: {
-        err_code: 0,
-        text: 'OK',
-      }
+      meta: OK
     }
   } else {
     response = {
-      meta: {
-        err_code: 1,
-        text: 'NOT OK',
-      }
+      meta: NOT_OK,
     }
   }
   return response;
